@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 // Guest Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:login');
 });
 
 // Authenticated Routes
@@ -28,8 +28,11 @@ Route::middleware('auth')->group(function () {
     // Master Data: Categories & Payrolls CRUD
     Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('payrolls', PayrollController::class)->except(['show']);
-    Route::get('/transactions/export', [TransactionController::class, 'export'])->name('transactions.export');
-    Route::resource('transactions', TransactionController::class)->except(['show']);
+
+    Route::middleware('throttle:transactions')->group(function () {
+        Route::get('/transactions/export', [TransactionController::class, 'export'])->name('transactions.export');
+        Route::resource('transactions', TransactionController::class)->except(['show']);
+    });
 
     // Security: Owner Only User Management CRUD
     Route::middleware('role:owner')->group(function () {

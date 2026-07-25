@@ -65,14 +65,17 @@ class DashboardController extends Controller
             
             $chartLabels[] = $monthDate->locale('id')->translatedFormat('F Y');
 
+            $startOfMonth = $monthDate->copy()->startOfMonth()->toDateString();
+            $endOfMonth = $monthDate->copy()->endOfMonth()->toDateString();
+
             // Sum income transactions in this month
             $inc = Transaction::where('type', 'income')
-                ->whereRaw("DATE_FORMAT(transaction_date, '%Y-%m') = ?", [$monthKey])
+                ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
                 ->sum('amount');
             
             // Sum expense transactions in this month
             $expTx = Transaction::where('type', 'expense')
-                ->whereRaw("DATE_FORMAT(transaction_date, '%Y-%m') = ?", [$monthKey])
+                ->whereBetween('transaction_date', [$startOfMonth, $endOfMonth])
                 ->sum('amount');
 
             // Sum payroll base salary in this month
