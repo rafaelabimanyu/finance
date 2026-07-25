@@ -42,6 +42,12 @@
                     Data Payroll
                 </a>
 
+                <a href="{{ route('transactions.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition duration-200 text-sm font-medium {{ request()->routeIs('transactions.*') ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200' }}">
+                    <!-- Transactions Icon -->
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                    Transaksi Keuangan
+                </a>
+
                 @if(auth()->user()->role === 'owner')
                 <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition duration-200 text-sm font-medium {{ request()->routeIs('users.*') ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200' }}">
                     <!-- Users Icon -->

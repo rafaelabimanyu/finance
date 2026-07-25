@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function () {
     // Master Data: Categories & Payrolls CRUD
     Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('payrolls', PayrollController::class)->except(['show']);
+    Route::resource('transactions', TransactionController::class)->except(['show']);
 
     // Security: Owner Only User Management CRUD
     Route::middleware('role:owner')->group(function () {
