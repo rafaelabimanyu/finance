@@ -54,6 +54,35 @@ class DashboardController extends Controller
         // 5. Net Profit / Laba Bersih
         $netProfit = $totalIncome - $totalExpense;
 
+        // 6. Chart Data: Monthly trend for the past 12 months (including the current month)
+        $chartLabels = [];
+        $chartIncome = [];
+        $chartExpense = [];
+
+        for ($i = 11; $i >= 0; $i--) {
+            $monthDate = Carbon::now()->subMonths($i);
+            $monthKey = $monthDate->format('Y-m');
+            
+            $chartLabels[] = $monthDate->locale('id')->translatedFormat('F Y');
+
+            // Sum income transactions in this month
+            $inc = Transaction::where('type', 'income')
+                ->whereRaw("DATE_FORMAT(transaction_date, '%Y-%m') = ?", [$monthKey])
+                ->sum('amount');
+            
+            // Sum expense transactions in this month
+            $expTx = Transaction::where('type', 'expense')
+                ->whereRaw("DATE_FORMAT(transaction_date, '%Y-%m') = ?", [$monthKey])
+                ->sum('amount');
+
+            // Sum payroll base salary in this month
+            $payExp = Payroll::where('period', $monthKey)
+                ->sum('base_salary');
+
+            $chartIncome[] = (float) $inc;
+            $chartExpense[] = (float) ($expTx + $payExp);
+        }
+
         return view('dashboard', compact(
             'totalCategories',
             'totalUsers',
@@ -66,7 +95,10 @@ class DashboardController extends Controller
             'netProfit',
             'startDate',
             'endDate',
-            'totalPayrollsCount'
+            'totalPayrollsCount',
+            'chartLabels',
+            'chartIncome',
+            'chartExpense'
         ));
     }
 }

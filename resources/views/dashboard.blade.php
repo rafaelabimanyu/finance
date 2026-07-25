@@ -101,6 +101,30 @@
         </div>
     </div>
 
+    <!-- Chart / Visual Analytics Section -->
+    <div class="grid grid-cols-1 gap-6">
+        @if(auth()->user()->role === 'owner')
+            <div class="bg-slate-950/40 border border-slate-800 p-6 rounded-3xl shadow-xl">
+                <div class="mb-4">
+                    <h4 class="text-sm font-bold text-slate-200">Tren Finansial Bulanan (Omset vs Pengeluaran)</h4>
+                    <p class="text-xs text-slate-500">Mencakup seluruh pencatatan transaksi masuk serta total pengeluaran (OPEX + Payroll gaji staf) dalam 12 bulan terakhir.</p>
+                </div>
+                <div class="h-80 w-full">
+                    <canvas id="financialChart"></canvas>
+                </div>
+            </div>
+        @else
+            <div class="bg-slate-950/40 border border-slate-800 p-8 rounded-3xl shadow-xl flex flex-col items-center justify-center text-center h-80 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="p-4 rounded-full bg-slate-900 border border-slate-800 text-slate-500 mb-3 shadow-lg">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                </div>
+                <h4 class="text-sm font-bold text-slate-300">Tren Keuangan Bulanan Dibatasi</h4>
+                <p class="text-xs text-slate-500 max-w-md mt-1">Grafik visual analitik korporat terintegrasi payroll bersifat rahasia dan hanya dapat diakses oleh akun tingkat Owner.</p>
+            </div>
+        @endif
+    </div>
+
     <!-- Secondary Stat / Info Section -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Categories count -->
@@ -158,4 +182,77 @@
         </div>
     </div>
 </div>
+
+@if(auth()->user()->role === 'owner')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('financialChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($chartLabels) !!},
+                datasets: [
+                    {
+                        label: 'Omset Kotor (Income)',
+                        data: {!! json_encode($chartIncome) !!},
+                        backgroundColor: 'rgba(52, 211, 153, 0.25)', // emerald-400
+                        borderColor: 'rgba(52, 211, 153, 0.85)',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                    },
+                    {
+                        label: 'Total Pengeluaran (OPEX + Payroll)',
+                        data: {!! json_encode($chartExpense) !!},
+                        backgroundColor: 'rgba(244, 63, 94, 0.25)', // rose-500
+                        borderColor: 'rgba(244, 63, 94, 0.85)',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#94a3b8', // slate-400
+                            font: {
+                                family: 'sans-serif',
+                                weight: 'bold',
+                            }
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(51, 65, 85, 0.15)', // slate-700
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(51, 65, 85, 0.15)',
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            callback: function(value) {
+                                return 'Rp ' + value.toLocaleString('id-ID');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+@endif
 @endsection

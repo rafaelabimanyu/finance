@@ -58,13 +58,21 @@
             </div>
 
             <!-- Action buttons -->
-            <div class="sm:col-span-2 md:col-span-5 flex justify-end gap-3 mt-2">
-                <a href="{{ route('transactions.index') }}" class="px-4 py-2 text-xs rounded-xl border border-slate-800 hover:bg-slate-900 text-slate-400 font-semibold transition">
-                    Reset Filter
-                </a>
-                <button type="submit" class="px-5 py-2 text-xs rounded-xl bg-cyan-500 text-white font-bold hover:bg-cyan-600 transition shadow-lg shadow-cyan-500/10">
-                    Terapkan Filter
-                </button>
+            <div class="sm:col-span-2 md:col-span-5 flex flex-col sm:flex-row justify-between items-center gap-3 mt-2">
+                <div>
+                    <a href="{{ route('transactions.export', request()->query()) }}" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/30 hover:bg-slate-900/60 text-slate-300 hover:text-cyan-400 font-semibold transition w-full sm:w-auto justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        Ekspor Laporan (CSV)
+                    </a>
+                </div>
+                <div class="flex gap-3 w-full sm:w-auto justify-end">
+                    <a href="{{ route('transactions.index') }}" class="px-4 py-2 text-xs rounded-xl border border-slate-800 hover:bg-slate-900 text-slate-400 font-semibold transition">
+                        Reset Filter
+                    </a>
+                    <button type="submit" class="px-5 py-2 text-xs rounded-xl bg-cyan-500 text-white font-bold hover:bg-cyan-600 transition shadow-lg shadow-cyan-500/10">
+                        Terapkan Filter
+                    </button>
+                </div>
             </div>
         </form>
     </div>

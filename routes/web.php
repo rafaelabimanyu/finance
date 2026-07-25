@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     // Master Data: Categories & Payrolls CRUD
     Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('payrolls', PayrollController::class)->except(['show']);
+    Route::get('/transactions/export', [TransactionController::class, 'export'])->name('transactions.export');
     Route::resource('transactions', TransactionController::class)->except(['show']);
 
     // Security: Owner Only User Management CRUD
